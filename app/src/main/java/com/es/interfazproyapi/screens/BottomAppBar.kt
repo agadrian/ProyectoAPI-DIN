@@ -22,8 +22,7 @@ fun MyBottomAppBar(
     navController: NavHostController,
     selectedIndex: Int,  // Recibir el índice seleccionado
     onItemSelected: (Int) -> Unit,  // Recibir el callback
-    listItems: List<NavigationItem>,
-    modifier: Modifier = Modifier
+    listItems: List<NavigationItem>
 ) {
 
 
@@ -89,33 +88,6 @@ fun MyBottomAppBar(
     }
 }
 
-
-
-
-        
-//        NavigationBarItem(
-//            selected = index == 1,
-//            onClick = { index = 1 },
-//            colors = NavigationBarItemDefaults.colors(
-//                //TODO
-//                indicatorColor = Color.Black,
-//                selectedTextColor = Color.White,
-//                unselectedTextColor = Color.Gray,
-//                selectedIconColor = Color.White,
-//                unselectedIconColor = Color.Gray
-//            ),
-//            icon = {
-//                Icon(
-//                    imageVector = Icons.Default.Place,
-//                    contentDescription = "Place"
-//                )
-//            },
-//            label = {
-//                Text(
-//                    text = "Places"
-//                )
-//            }
-//        )
 
 
 

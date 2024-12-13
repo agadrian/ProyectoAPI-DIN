@@ -4,7 +4,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,18 +11,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PinDrop
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -48,92 +42,103 @@ fun MainScreen(
             .fillMaxSize()
 
     ) {
-        Row (
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ){
-            Text(
-                text = "Cards de ejemplo para un futuro",
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
+
+        HeaderMain()
 
         Spacer(Modifier.height(15.dp))
 
-        Box(
-            Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+        BodyMain()
 
+    }
+}
+
+@Composable
+fun HeaderMain(){
+    Row (
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ){
+        Text(
+            text = "Cards de ejemplo para un futuro",
+            color = MaterialTheme.colorScheme.onPrimary,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+fun BodyMain(){
+    Box(
+        Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+
+    ) {
+
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            // Fila 1
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                // Fila 1
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    OptionCard(
-                        title = "Opc 1",
-                        description = "Desc 1",
-                        icon = Icons.Filled.PinDrop
-                        ,
-                        onClick = {  }
-                    )
-                    OptionCard(
-                        title = "Opc 2",
-                        description = "Desc 2",
-                        icon = Icons.Filled.PinDrop,
-                        onClick = {  }
-                    )
-                }
+                OptionCard(
+                    title = "Opc 1",
+                    description = "Desc 1",
+                    icon = Icons.Filled.PinDrop
+                    ,
+                    onClick = {  }
+                )
+                OptionCard(
+                    title = "Opc 2",
+                    description = "Desc 2",
+                    icon = Icons.Filled.PinDrop,
+                    onClick = {  }
+                )
+            }
 
-                // Fila 2
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    OptionCard(
-                        title = "Opc 3",
-                        description = "Desc 3",
-                        icon = Icons.Filled.PinDrop,
-                        onClick = {  }
-                    )
-                    OptionCard(
-                        title = "Opc 4",
-                        description = "Desc 4",
-                        icon = Icons.Filled.PinDrop,
-                        onClick = {  }
-                    )
-                }
+            // Fila 2
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OptionCard(
+                    title = "Opc 3",
+                    description = "Desc 3",
+                    icon = Icons.Filled.PinDrop,
+                    onClick = {  }
+                )
+                OptionCard(
+                    title = "Opc 4",
+                    description = "Desc 4",
+                    icon = Icons.Filled.PinDrop,
+                    onClick = {  }
+                )
+            }
 
-                // Fila 3
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    OptionCard(
-                        title = "Opc 5",
-                        description = "Desc 5",
-                        icon = Icons.Filled.PinDrop,
-                        onClick = {  }
-                    )
-                    OptionCard(
-                        title = "Opc 6",
-                        description = "Desc 6",
-                        icon = Icons.Filled.PinDrop,
-                        onClick = {  }
-                    )
-                }
+            // Fila 3
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OptionCard(
+                    title = "Opc 5",
+                    description = "Desc 5",
+                    icon = Icons.Filled.PinDrop,
+                    onClick = {  }
+                )
+                OptionCard(
+                    title = "Opc 6",
+                    description = "Desc 6",
+                    icon = Icons.Filled.PinDrop,
+                    onClick = {  }
+                )
             }
         }
     }
-
 }
 
 
@@ -156,7 +161,7 @@ fun OptionCard(
         ),
         modifier = Modifier
             .size(180.dp)
-            .border(2.dp, MaterialTheme.colorScheme.onPrimary, RoundedCornerShape(16.dp))
+            .border(0.5.dp, MaterialTheme.colorScheme.onPrimary, RoundedCornerShape(16.dp))
     ) {
         Column(
             modifier = Modifier

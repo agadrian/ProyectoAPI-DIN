@@ -10,18 +10,27 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Analytics
+import androidx.compose.material.icons.filled.Directions
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,6 +45,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
@@ -44,14 +54,11 @@ import androidx.compose.ui.input.key.type
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.es.interfazproyapi.R
-import com.es.interfazproyapi.navegation.AppScreen
-import com.es.interfazproyapi.ui.theme.white
 
 @Composable
 fun FrontScreen(
@@ -86,10 +93,24 @@ fun FrontScreen(
             Text(
                 text = "Routes Tracker",
                 fontSize = 36.sp,
-                color = MaterialTheme.colorScheme.onPrimary // No uso MaterialTheme porque quiero que sea siemore blanco
+                color = MaterialTheme.colorScheme.onPrimary
             )
 
-            Spacer(Modifier.height(300.dp))
+            Spacer(Modifier.height(5.dp))
+
+            HorizontalDivider(
+                Modifier
+                    .padding(horizontal = 50.dp),
+                2.dp,
+                MaterialTheme.colorScheme.onPrimary
+            )
+
+            Spacer(Modifier.height(100.dp))
+
+            RowCards()
+
+            Spacer(Modifier.height(150.dp))
+
 
             // Boton acceso
             ButtonEffect(
@@ -102,6 +123,87 @@ fun FrontScreen(
         }
     }
 }
+
+@Composable
+fun RowCards(){
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        FeatureCard(
+            icon = Icons.Default.LocationOn,
+            title = "Rastrear Ubicación",
+            description = "Sigue tu ubicació."
+        )
+        FeatureCard(
+            icon = Icons.Default.Directions,
+            title = "Historial de Rutas",
+            description = "Accede a tus rutas previas."
+        )
+        FeatureCard(
+            icon = Icons.Default.Analytics,
+            title = "Análisis",
+            description = "Sigue un análisis semanal."
+        )
+    }
+}
+
+
+@Composable
+fun FeatureCard(
+    icon: ImageVector,
+    title: String,
+    description: String
+) {
+
+    Card(
+        modifier = Modifier
+            .width(120.dp)
+            .height(180.dp)
+            .padding(8.dp)
+            .border(0.2.dp, MaterialTheme.colorScheme.onPrimary, RoundedCornerShape(16.dp))
+        ,
+        colors = CardDefaults.cardColors(
+            containerColor = Color.Transparent,
+            contentColor = MaterialTheme.colorScheme.onPrimary
+        ),
+        //elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(5.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = title,
+                modifier = Modifier.size(16.dp)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = title,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = description,
+                fontSize = 12.sp,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+
 
 
 /**

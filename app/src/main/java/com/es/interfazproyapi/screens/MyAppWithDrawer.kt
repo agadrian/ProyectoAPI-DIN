@@ -330,10 +330,7 @@ fun NavigationDrawerContent(
                 modifier = Modifier
                     .padding(NavigationDrawerItemDefaults.ItemPadding)
             )
-
         }
-
-
     }
 }
 

@@ -1,5 +1,6 @@
 package com.es.interfazproyapi.screens.apiScreen
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -26,55 +28,95 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.es.interfazproyapi.utils.customToast
 
 @Composable
 fun APIScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController
 ){
+    val context = LocalContext.current
+
     val listaEndPointsGet = listOf(
-        "/usuarios", "/usuarios/1", "/usuarios/login", "/usuarios/register"
+        "/usuarios", "/usuarios/{id}", "/rutas", "/rutas/{id}"
     )
 
     val listaEndPointsPost = listOf(
-        "/usuarios", "/usuarios/1", "/usuarios/login", "/usuarios/register"
+        "/usuarios/register", "/usuarios/login", "/rutas"
     )
+
 
     Column(
         modifier = Modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Endpoints",
-            fontWeight = FontWeight.Bold,
-            fontSize = 40.sp,
-            color = MaterialTheme.colorScheme.onPrimary,
-            modifier = Modifier
 
-        )
+        Header("Endpoints")
 
         Spacer(Modifier.height(40.dp))
 
-
-        Text(
-            text = "Método GET",
-            color = MaterialTheme.colorScheme.onPrimary,
-            fontWeight = FontWeight.Bold,
-            textDecoration = TextDecoration.Underline,
-            fontSize =18.sp
+        Body(
+            listaEndPointsGet,
+            listaEndPointsPost,
+            context
         )
-
-        listaEndPointsGet.forEach { endpoint ->
-            APIEndPointItem(
-                name = endpoint,
-                onButtonClick = {  } //TODO (Meter un toast)
-            )
-       }
-
-
     }
 
+
+}
+
+@Composable
+fun Header(
+    titulo: String
+){
+    Text(
+        text = titulo,
+        fontWeight = FontWeight.Bold,
+        fontSize = 40.sp,
+        color = MaterialTheme.colorScheme.onPrimary,
+        modifier = Modifier
+
+    )
+}
+
+
+@Composable
+fun Body(
+    listaEndPointsGet: List<String>,
+    listaEndPointsPost: List<String>,
+    context: Context
+){
+    ShowListEndPoints(listaEndPointsGet,"Métodos GET" , context)
+
+    Spacer(Modifier.height(25.dp))
+
+    ShowListEndPoints(listaEndPointsPost,"Métodos POST" , context)
+}
+
+
+
+@Composable
+fun ShowListEndPoints(
+    lista: List<String>,
+    titulo: String,
+    context: Context
+){
+
+    Text(
+        text = titulo,
+        color = MaterialTheme.colorScheme.onPrimary,
+        fontWeight = FontWeight.Bold,
+        textDecoration = TextDecoration.Underline,
+        fontSize = 18.sp
+    )
+
+    lista.forEach { endpoint ->
+        APIEndPointItem(
+            name = endpoint,
+            onButtonClick = { customToast(context, "Soon...") }
+        )
+    }
 }
 
 
