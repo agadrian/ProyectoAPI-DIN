@@ -52,8 +52,10 @@ fun MyTopAppBar(
             navigationIcon = {
                 IconButton(
                     onClick = {
-                        navController.navigateUp()
-                    } //TODO
+                        if (!navController.navigateUp()) {
+                            navController.popBackStack()
+                        }
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -70,16 +72,8 @@ fun MyTopAppBar(
             // Iconos que se colocan al final de la barra
             actions = {
 
-//            IconButton(
-//                onClick = {} // TODO
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Filled.Search,
-//                    contentDescription = "Search"
-//                )
-//            }
 
-                // Icono menun hamurguesa
+                // Icono menu hamurguesa
                 IconButton(
                     onClick = onMenuClick
                 ) {

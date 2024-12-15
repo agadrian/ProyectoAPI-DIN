@@ -109,7 +109,7 @@ fun FrontScreen(
 
             RowCards()
 
-            Spacer(Modifier.height(150.dp))
+            Spacer(Modifier.height(100.dp))
 
 
             // Boton acceso

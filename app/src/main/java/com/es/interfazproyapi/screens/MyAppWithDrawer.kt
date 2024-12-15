@@ -49,6 +49,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -66,7 +67,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 
-// TODO: Evitar acceder a lam misma pantalla dos veces seguidas, eliminarla de la pila
+
 @Composable
 fun MyAppWithDrawer(
     isDarkMode: Boolean,
@@ -75,10 +76,9 @@ fun MyAppWithDrawer(
     modifier: Modifier = Modifier,
 
 ){
-    //val snackbarHostState = remember { SnackbarHostState() }
+
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-
 
 
     // Lista de items que tendra el menu hamburguesa dentro
@@ -143,49 +143,36 @@ fun MyAppWithDrawer(
     )
 
 
-    // Crear un estado compartido para el índice seleccionado
-    var selectedIndexDrawer by rememberSaveable { mutableIntStateOf(-1) }
-    var selectedIndexBottomBar by rememberSaveable { mutableIntStateOf(0) }
-
 
     // Obtener la ruta actual
     val currentBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry.value?.destination?.route
 
-    // Sincronizar los índices de selección con la ruta // TODO
-    LaunchedEffect(currentRoute) {
-        // Sincronizar solo si el cambio de ruta proviene de un cambio en el menú inferior
-        if (selectedIndexDrawer == -1) {
-            selectedIndexBottomBar = items.indexOfFirst { it.route == currentRoute }
-        } else if (selectedIndexBottomBar == -1) {
-            selectedIndexDrawer = items.indexOfFirst { it.route == currentRoute }
-        }
-    }
+    val bottomBarItems = items.take(4)
+    val drawerItems = items.takeLast(4)
 
     // Controlar la visibilidad de la barra lateral, para no mostrarla en la pantalla inicial
     val isDrawerEnabled = currentRoute != AppScreen.FrontScreen.route
-
-    // Filtrar los primeros 4 items para la barra inferior
-    val bottomBarItems = items.take(4)
 
 
     if (isDrawerEnabled){ // Controlar si es la pantalla de Welcome o no
         ModalNavigationDrawer(
             drawerState = drawerState,
-
             drawerContent = {
 
                 NavigationDrawerContent(
-                    items = items.takeLast(4),
-                    selectedItemIndex = selectedIndexDrawer,
-                    onItemSelected = { index ->
-                        selectedIndexDrawer = index
-                        selectedIndexBottomBar = -1
+                    items = drawerItems,
+                    currentRoute = currentRoute,
+                    onItemSelected = {route ->
                         coroutineScope.launch {
-
-                            drawerState.close()
-
-                            navController.navigate(items[selectedIndexDrawer+4].route ?:"")
+                            // Navegacion evitando duplicar pantalla
+                            if (currentRoute != route) {
+                                drawerState.close()
+                                navController.navigate(route) {
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
                         }
                     },
                     isDarkMode = isDarkMode,
@@ -201,16 +188,22 @@ fun MyAppWithDrawer(
                 coroutineScope = coroutineScope,
                 showBars = true,
                 modifier = modifier,
-                selectedIndex = selectedIndexBottomBar,
-                onBottomBarItemSelected = { index ->
-                    selectedIndexBottomBar = index
-                    selectedIndexDrawer = -1
-                    navController.navigate(items[selectedIndexBottomBar].route ?: "")
+                currentRoute = currentRoute,
+                onBottomBarItemSelected = { route ->
+                    // Navegacion evitando duplicar pantalla
+                    if (currentRoute != route) {
+                        navController.navigate(route) {
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
                 },
                 bottomBarItems
             )
         }
-    }else{
+    }
+
+    else{
         // No moostrar las barras cuando es la WelcomeScreen
         MyScaffold(
             navController = navController,
@@ -218,8 +211,8 @@ fun MyAppWithDrawer(
             coroutineScope = coroutineScope,
             showBars = false, // Sin barras
             modifier = modifier,
-            selectedIndex = selectedIndexBottomBar,
-            onBottomBarItemSelected = { index -> selectedIndexBottomBar = index },
+            currentRoute = currentRoute,
+            onBottomBarItemSelected = {},
             items
         )
     }
@@ -236,8 +229,8 @@ fun MyScaffold(
     coroutineScope: CoroutineScope,
     showBars: Boolean,
     modifier: Modifier = Modifier,
-    selectedIndex: Int,  // Recibir el indice seleccionado
-    onBottomBarItemSelected: (Int) -> Unit,  // Actualizar el indice
+    currentRoute: String?,
+    onBottomBarItemSelected: (String) -> Unit,
     items: List<NavigationItem>
 ) {
     Scaffold(
@@ -252,8 +245,8 @@ fun MyScaffold(
             if (showBars) {
                 MyBottomAppBar(
                     navController,
-                    selectedIndex = selectedIndex,
-                    onItemSelected = { onBottomBarItemSelected(it) },
+                    currentRoute = currentRoute,
+                    onItemSelected = onBottomBarItemSelected, // Le pasa la ruta de la pantalla actual
                     listItems = items
                 )
             }
@@ -280,8 +273,8 @@ fun MyScaffold(
 @Composable
 fun NavigationDrawerContent(
     items: List<NavigationItem>,
-    selectedItemIndex: Int,
-    onItemSelected: (Int) -> Unit,
+    currentRoute: String?,
+    onItemSelected: (String) -> Unit,
     isDarkMode: Boolean,
     onDarkModeSwitchChange: (Boolean) -> Unit,
 
@@ -300,19 +293,17 @@ fun NavigationDrawerContent(
 
         Spacer(Modifier.height(16.dp))
 
-        items.forEachIndexed { index, item ->
+        items.forEach { item ->
             NavigationDrawerItem(
-                label = {
-                    Text(
-                        text = item.title
-                    )
-                },
-                selected = index == selectedItemIndex,
-                onClick = { onItemSelected(index) },
-
+                label = { Text(text = item.title) },
+                selected = item.route == currentRoute,
+                onClick = { onItemSelected(item.route) },
+                colors = NavigationDrawerItemDefaults.colors(
+                    selectedContainerColor = if (isDarkMode) Color.Gray else Color.LightGray
+                ),
                 icon = {
                     Icon(
-                        imageVector = if (index == selectedItemIndex) {
+                        imageVector = if (item.route == currentRoute) {
                             item.selectedIcon
                         }else {
                             item.unselectedIcon

@@ -14,7 +14,8 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
+    /* NOT IMPLEMENTED FINALLY. IM FUCKED :)*/
     Box(Modifier.fillMaxSize()) {
-        Text("Settings Screen", modifier = Modifier.padding(16.dp))
+        Text("Login Screen", modifier = Modifier.padding(16.dp))
     }
 }

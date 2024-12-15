@@ -15,7 +15,7 @@ val Pink40 = Color(0xFF7D5260)
 val black = hexToColor("#FF000000")
 val white = hexToColor("#FFFFFFFF")
 val green = hexToColor("#1ed760")
-val backgroundDark = hexToColor("#121212")
+
 
 
 /**

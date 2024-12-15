@@ -20,18 +20,12 @@ import com.es.interfazproyapi.ui.theme.white
 @Composable
 fun MyBottomAppBar(
     navController: NavHostController,
-    selectedIndex: Int,  // Recibir el índice seleccionado
-    onItemSelected: (Int) -> Unit,  // Recibir el callback
+    currentRoute: String?,
+    onItemSelected: (String) -> Unit,
     listItems: List<NavigationItem>
 ) {
 
 
-//    // Detecta la ruta actual
-//    val currentBackStackEntry by navController.currentBackStackEntryAsState()
-//    val currentRoute = currentBackStackEntry?.destination?.route
-
-
-    //var index by remember { mutableIntStateOf(0) }
     Column {
 
         HorizontalDivider(
@@ -43,27 +37,17 @@ fun MyBottomAppBar(
         NavigationBar(
             containerColor = Color.Black
         ) {
-            listItems.forEachIndexed { index, item ->
-                val isSelected = index == selectedIndex
+            listItems.forEach { item ->
+                val isSelected = item.route == currentRoute
 
                 NavigationBarItem(
                     selected = isSelected,
                     onClick = {
                         if (!isSelected) {
-                            item.route?.let {
-                                navController.navigate(it) {
-                                    popUpTo(navController.graph.startDestinationId) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            }
+                            onItemSelected(item.route)
                         }
-                        onItemSelected(index)
                     },
                     colors = NavigationBarItemDefaults.colors(
-                        //TODO
                         indicatorColor = Color.Black,
                         selectedTextColor = Color.White,
                         unselectedTextColor = Color.Gray,
@@ -89,12 +73,3 @@ fun MyBottomAppBar(
 }
 
 
-
-
-//@Composable
-//@Preview
-//fun PreviewBottomBar(){
-//    MyBottomAppBar(
-//        rememberNavController()
-//    )
-//}

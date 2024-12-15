@@ -50,7 +50,7 @@ fun AppNavigation(
         }
 
 
-        // Ruta especifica de LoginScreen TODO: Implementarla si me da tiempo
+        // Ruta especifica de LoginScreen TODO: (no me ha dado tiempo))
         composable (
             route = AppScreen.LoginScreen.route,
         ) {
